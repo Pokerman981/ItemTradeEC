@@ -10,8 +10,11 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.text.serializer.TextSerializer;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.List;
 
@@ -19,7 +22,9 @@ public class ItemTradeCommand  implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         List<Text> text = Lists.newArrayList();
-        text.add(Utils.sendMessage(Main.getInstance().configVariables.getBaseCommandMessage()));
+        String message = Main.getInstance().configVariables.getBaseCommandMessage().isEmpty() ? "THis ain't workingn Nigga !" : Main.getInstance().configVariables.getBaseCommandMessage();
+        MessageChannel.TO_ALL.send(Text.of());
+        text.add(sendMessageWithColor(message));
 
         PaginationList.builder()
                 .contents(text)
@@ -33,4 +38,10 @@ public class ItemTradeCommand  implements CommandExecutor {
 
         return CommandResult.success();
     }
+
+
+    public Text sendMessageWithColor(String text) {
+        return TextSerializers.FORMATTING_CODE.deserialize(text).toText();
+    }
+
 }

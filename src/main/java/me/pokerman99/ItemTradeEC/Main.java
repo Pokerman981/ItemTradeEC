@@ -71,15 +71,6 @@ public class Main {
 
     }
 
-    public void registerCommands() {
-        CommandSpec itemtrade = CommandSpec.builder()
-                .permission("itemtradeec.base")
-                .executor(new ItemTradeCommand())
-                .build();
-
-        Sponge.getCommandManager().register(instance, itemtrade, "itemtrade");
-    }
-
     public void populateVariables() {
         configVariables.setBaseCommandMessage(rootNode.getNode("base-command-message").getString());
     }
@@ -92,6 +83,18 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+
+
+    public void registerCommands() {
+        CommandSpec itemtrade = CommandSpec.builder()
+                .permission("itemtradeec.base")
+                .executor(new ItemTradeCommand())
+                .build();
+
+        Sponge.getCommandManager().register(instance, itemtrade, "itemtrade");
+    }
+
 
 
 

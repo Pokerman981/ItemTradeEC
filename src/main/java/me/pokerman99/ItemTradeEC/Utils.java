@@ -14,9 +14,4 @@ public class Utils {
         if (sender == null) { return; }
         sender.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(color(message)));
     }
-
-    public static Text sendMessage(String message) {
-       return TextSerializers.FORMATTING_CODE.deserialize(message);
-    }
-
 }
