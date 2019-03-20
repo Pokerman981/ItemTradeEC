@@ -68,6 +68,7 @@ public class Main {
 
         //TODO Register commands, listeners, populate variables
         registerCommands();
+        populateVariables();
 
     }
 
