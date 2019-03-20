@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            url = 'https://oss.sonatype.org/content/groups/public'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = "1.4.0"
+group= "me.pokerman99"
+archivesBaseName = "ItemTradeEC"
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.2.2613"
+    runDir = "run"
+    mappings = "snapshot_20171003"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://oss.sonatype.org/content/repositories/snapshots'
+    }
+    maven {
+        name 'Sponge maven repo'
+        url 'http://repo.spongepowered.org/maven'
+    }
+    maven {
+        url = "http://repo.drnaylor.co.uk/artifactory/list/minecraft"
+    }
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    compile files('libs/Pixelmon-1.12.2-7.0.0-universal.jar')
+//    compile files('libs/SpongeForge-1.12.2.jar')
+    compile "org.spongepowered:spongeapi:7.1.0-SNAPSHOT"
+    compile "org.spongepowered:spongeforge:1.12.2-2705-7.1.0-BETA-3406"
+
+    compile "io.github.nucleuspowered:nucleus-api:1.4.4-S7.0"
+}
+
+jar {
+    includeEmptyDirs = false
+    classifier = 'universal'
+    version = "${project.minecraft.version}-${project.version}"
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+}
