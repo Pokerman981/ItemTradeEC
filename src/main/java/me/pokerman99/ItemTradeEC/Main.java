@@ -1,7 +1,6 @@
 package me.pokerman99.ItemTradeEC;
 
 
-
 import com.google.inject.Inject;
 import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
 import me.pokerman99.ItemTradeEC.Commands.EvoCommand;
@@ -13,14 +12,12 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.io.IOException;
 import java.nio.file.Path;

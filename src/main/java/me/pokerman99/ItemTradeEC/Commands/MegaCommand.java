@@ -1,11 +1,7 @@
 package me.pokerman99.ItemTradeEC.Commands;
 
 import com.google.common.collect.Lists;
-import com.pixelmonmod.pixelmon.enums.EnumMegaItem;
-import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
 import me.pokerman99.ItemTradeEC.Utils;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -16,8 +12,6 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.util.List;
 import java.util.Random;
