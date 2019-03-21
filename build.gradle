@@ -54,7 +54,7 @@ configurations {
 }
 
 dependencies {
-    compile files('libs/Pixelmon-1.12.2-7.0.0-universal.jar')
+    compile files('libs/Pixelmon-1.12.2-7.0.5-universal.jar')
 //    compile files('libs/SpongeForge-1.12.2.jar')
     compile "org.spongepowered:spongeapi:7.1.0-SNAPSHOT"
     compile "org.spongepowered:spongeforge:1.12.2-2705-7.1.0-BETA-3406"

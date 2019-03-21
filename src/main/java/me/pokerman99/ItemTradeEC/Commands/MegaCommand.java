@@ -32,13 +32,13 @@ public class MegaCommand implements CommandExecutor {
         String heldItemName = heldItem.getType().getId();
 
         if (heldItem.getQuantity() > 1) {
-            Utils.sendMessage(src, "&cPlease only have one time in the stack!");
+            Utils.sendMessage(src, "&cPlease only have one item in the stack!");
             return CommandResult.empty();
         }
 
 
         if (!MEGASTONEITEMNAMES.toString().contains(heldItemName)) {
-            Utils.sendMessage(src, "&cThe supplied item is not a mega stone!");
+            Utils.sendMessage(src, "&cYou are not holding a mega stone");
             return CommandResult.empty();
         }
 

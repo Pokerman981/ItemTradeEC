@@ -27,7 +27,7 @@ public class TMCommand implements CommandExecutor {
         String heldItemName = heldItem.getType().getId();
 
         if (heldItem.getQuantity() > 1) {
-            Utils.sendMessage(src, "&cPlease only have one time in the stack!");
+            Utils.sendMessage(src, "&cPlease only have one item in the stack!");
             return CommandResult.empty();
         }
 

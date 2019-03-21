@@ -2,7 +2,9 @@ package me.pokerman99.ItemTradeEC;
 
 
 import com.google.inject.Inject;
+import com.pixelmonmod.pixelmon.enums.EnumEvolutionStone;
 import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
+import com.pixelmonmod.pixelmon.items.ItemEvolutionStone;
 import me.pokerman99.ItemTradeEC.Commands.EvoCommand;
 import me.pokerman99.ItemTradeEC.Commands.ItemTradeCommand;
 import me.pokerman99.ItemTradeEC.Commands.MegaCommand;
@@ -18,6 +20,8 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -104,7 +108,7 @@ public class Main {
                 .build();
 
         CommandSpec mega = CommandSpec.builder()
-                .permission("itemtradeec.command.evo")
+                .permission("itemtradeec.command.mega")
                 .executor(new MegaCommand())
                 .build();
 
@@ -126,14 +130,11 @@ public class Main {
 
             for (Item item : items) {
                 String itemName = item.getRegistryName().toString();
+                if (itemName.contains("air")) {
+                    continue;
+                }
 
                 MegaCommand.MEGASTONEITEMNAMES.add(itemName);
-
-                /*
-                * If there happens to be one in the future that doesn't
-                * follow this format you can add an if statement to check
-                * and manually define the new variable
-                 */
             }
         }
     }
