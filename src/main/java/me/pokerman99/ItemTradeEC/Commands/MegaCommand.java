@@ -1,6 +1,8 @@
 package me.pokerman99.ItemTradeEC.Commands;
 
 import com.google.common.collect.Lists;
+import me.pokerman99.ItemTradeEC.ConfigVariables;
+import me.pokerman99.ItemTradeEC.Main;
 import me.pokerman99.ItemTradeEC.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -12,6 +14,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scheduler.Task;
 
 import java.util.List;
 import java.util.Random;
@@ -21,10 +24,18 @@ public class MegaCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
         Player player = (Player) src;
+        String metaDataResult = Utils.getMetaData(player.getUniqueId()).getMeta().getOrDefault("itemtrade-mega", "-1");
+        long cooldown = Long.valueOf(metaDataResult);
+
+        if (System.currentTimeMillis() < cooldown) {
+            Utils.sendMessage(player, "&cYou need to wait another " + Utils.timeDiffFormat((cooldown - System.currentTimeMillis()) / 1000, true) + " before you can use that command again!");
+            return CommandResult.empty();
+        }
+        ConfigVariables configVariables = Main.getInstance().configVariables;
+
         if (!player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
-            Utils.sendMessage(src, "&cYou are not holding a mega stone");
+            Utils.sendMessage(src, configVariables.getNotHoldingItemMEGA());
             return CommandResult.empty();
         }
 
@@ -32,13 +43,13 @@ public class MegaCommand implements CommandExecutor {
         String heldItemName = heldItem.getType().getId();
 
         if (heldItem.getQuantity() > 1) {
-            Utils.sendMessage(src, "&cPlease only have one item in the stack!");
+            Utils.sendMessage(src, configVariables.getOnlyOneItemMEGA());
             return CommandResult.empty();
         }
 
 
         if (!MEGASTONEITEMNAMES.toString().contains(heldItemName)) {
-            Utils.sendMessage(src, "&cYou are not holding a mega stone");
+            Utils.sendMessage(src, configVariables.getNotHoldingItemMEGA());
             return CommandResult.empty();
         }
 
@@ -54,6 +65,13 @@ public class MegaCommand implements CommandExecutor {
                 .build();
 
         player.getInventory().offer(stack);
+
+
+        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta unset itemtrade-mega");
+
+        Task.builder().delayTicks(2).execute(task -> {
+            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-mega " + (Main.day + System.currentTimeMillis()));
+        }).submit(Main.getInstance());
 
 
         return CommandResult.empty();

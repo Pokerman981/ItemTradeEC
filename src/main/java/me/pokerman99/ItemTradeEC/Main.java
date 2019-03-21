@@ -2,9 +2,7 @@ package me.pokerman99.ItemTradeEC;
 
 
 import com.google.inject.Inject;
-import com.pixelmonmod.pixelmon.enums.EnumEvolutionStone;
 import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
-import com.pixelmonmod.pixelmon.items.ItemEvolutionStone;
 import me.pokerman99.ItemTradeEC.Commands.EvoCommand;
 import me.pokerman99.ItemTradeEC.Commands.ItemTradeCommand;
 import me.pokerman99.ItemTradeEC.Commands.MegaCommand;
@@ -20,8 +18,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -61,6 +57,7 @@ public class Main {
     }
 
     public ConfigVariables configVariables;
+    public static int day = 3600 * 24 * 1000;
 
 
     @Listener
@@ -83,10 +80,32 @@ public class Main {
 
     public void populateVariables() {
         configVariables.setBaseCommandMessage(rootNode.getNode("base-command-message").getString());
+
+        configVariables.setNotHoldingItemTM(rootNode.getNode("commands", "tm-hm", "not-holding-item").getString());
+        configVariables.setOnlyOneItemTM(rootNode.getNode("commands", "tm-hm", "only-one-item").getString());
+
+        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "evo", "not-holding-item").getString());
+        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "evo", "only-one-item").getString());
+
+        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "mega", "not-holding-item").getString());
+        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "mega", "only-one-item").getString());
+
+
     }
 
     public void genDefaultConfig() {
         rootNode.getNode("base-command-message").setValue("&6&l/itemtrade tm &8- Trade a TM/HM\n&6&l/itemtrade evo &8- Trade an evolution stone\n&6&l/itemtrade mega &8- Trade a mega stone").setComment("This auto uses pageintation");
+
+        rootNode.getNode("commands", "tm-hm", "not-holding-item").setValue("&cYou are not holding a TM/HM");
+        rootNode.getNode("commands", "tm-hm", "only-one-item").setValue("&cPlease only have one item in the stack!");
+
+        rootNode.getNode("commands", "evo", "not-holding-item").setValue("&cYou are not holding a evolution stone");
+        rootNode.getNode("commands", "evo", "only-one-item").setValue("&cPlease only have one item in the stack!");
+
+        rootNode.getNode("commands", "mega", "not-holding-item").setValue("&cYou are not holding a mega stone");
+        rootNode.getNode("commands", "mega", "only-one-item").setValue("&cPlease only have one item in the stack!");
+
+
         try {
             loader.save(rootNode);
         } catch (IOException e) {

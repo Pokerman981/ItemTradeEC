@@ -46,6 +46,9 @@ repositories {
     maven {
         url = "http://repo.drnaylor.co.uk/artifactory/list/minecraft"
     }
+    maven {
+        url = "https://repo.lucko.me/"
+    }
 }
 
 configurations {
@@ -58,7 +61,7 @@ dependencies {
 //    compile files('libs/SpongeForge-1.12.2.jar')
     compile "org.spongepowered:spongeapi:7.1.0-SNAPSHOT"
     compile "org.spongepowered:spongeforge:1.12.2-2705-7.1.0-BETA-3406"
-
+    compile "me.lucko.luckperms:luckperms-api:3.2"
     compile "io.github.nucleuspowered:nucleus-api:1.4.4-S7.0"
 }
 
