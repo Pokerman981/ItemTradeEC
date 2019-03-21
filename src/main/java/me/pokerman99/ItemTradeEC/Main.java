@@ -3,7 +3,12 @@ package me.pokerman99.ItemTradeEC;
 
 
 import com.google.inject.Inject;
+import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
+import me.pokerman99.ItemTradeEC.Commands.EvoCommand;
 import me.pokerman99.ItemTradeEC.Commands.ItemTradeCommand;
+import me.pokerman99.ItemTradeEC.Commands.MegaCommand;
+import me.pokerman99.ItemTradeEC.Commands.TMCommand;
+import net.minecraft.item.Item;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.spongepowered.api.Sponge;
@@ -14,6 +19,8 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -67,6 +74,7 @@ public class Main {
         }
 
         //TODO Register commands, listeners, populate variables
+        loadMegaStoneNames();
         registerCommands();
         populateVariables();
 
@@ -88,12 +96,49 @@ public class Main {
 
 
     public void registerCommands() {
+        CommandSpec tm = CommandSpec.builder()
+                .permission("itemtradeec.command.tm")
+                .executor(new TMCommand())
+                .build();
+
+        CommandSpec evo = CommandSpec.builder()
+                .permission("itemtradeec.command.evo")
+                .executor(new EvoCommand())
+                .build();
+
+        CommandSpec mega = CommandSpec.builder()
+                .permission("itemtradeec.command.evo")
+                .executor(new MegaCommand())
+                .build();
+
         CommandSpec itemtrade = CommandSpec.builder()
                 .permission("itemtradeec.base")
+                .child(tm, "tm", "hm")
+                .child(evo, "evo")
+                .child(mega, "mega")
                 .executor(new ItemTradeCommand())
                 .build();
 
         Sponge.getCommandManager().register(instance, itemtrade, "itemtrade");
+    }
+
+    public void loadMegaStoneNames() {
+        EnumMegaPokemon[] enumMegaPokemon = EnumMegaPokemon.values();
+        for (EnumMegaPokemon enumMegaPokemon1 : enumMegaPokemon) {
+            Item[] items = enumMegaPokemon1.getMegaEvoItems();
+
+            for (Item item : items) {
+                String itemName = item.getRegistryName().toString();
+
+                MegaCommand.MEGASTONEITEMNAMES.add(itemName);
+
+                /*
+                * If there happens to be one in the future that doesn't
+                * follow this format you can add an if statement to check
+                * and manually define the new variable
+                 */
+            }
+        }
     }
 
 

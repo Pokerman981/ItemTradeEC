@@ -11,17 +11,17 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.util.Random;
 
-public class TMCommand implements CommandExecutor {
+public class EvoCommand implements CommandExecutor {
+    static String[] evoItems = {"pixelmon:fire_stone", "pixelmon:water_stone", "pixelmon:moon_stone", "pixelmon:thunder_stone", "pixelmon:leaf_stone", "pixelmon:sun_stone", "pixelmon:dawn_stone", "pixelmon:dusk_stone"};
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player player = (Player) src;
         if (!player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
-            Utils.sendMessage(src, "&cYou are not holding a TM/HM");
+            Utils.sendMessage(src, "&cYou are not holding a evolution stone");
             return CommandResult.empty();
         }
 
@@ -33,8 +33,8 @@ public class TMCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
-        if (!heldItemName.contains("pixelmon:tm") && !heldItemName.contains("pixelmon:hm")) {
-            Utils.sendMessage(src, "&cThe supplied item is not a TM/HM!");
+        if (!heldItemName.matches("(pixelmon:).*?(_stone)")) {
+            Utils.sendMessage(src, "&cThe supplied item is not a evolution stone!");
             return CommandResult.empty();
         }
 
@@ -43,14 +43,13 @@ public class TMCommand implements CommandExecutor {
 
 
         Random random = new Random();
-        int num = heldItemName.contains("tm") ? random.nextInt(173) + 1 : random.nextInt(9) + 1;
-        String type = heldItemName.contains("tm") ? "tm" : "hm";
 
         ItemStack stack = ItemStack.builder()
-                .itemType(Sponge.getRegistry().getType(ItemType.class, "pixelmon:" + type + num).get())
+                .itemType(Sponge.getRegistry().getType(ItemType.class, evoItems[random.nextInt(7)+1]).get())
                 .build();
 
         player.getInventory().offer(stack);
+
 
         return CommandResult.success();
     }

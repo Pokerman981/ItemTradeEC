@@ -22,8 +22,7 @@ public class ItemTradeCommand  implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         List<Text> text = Lists.newArrayList();
-        String message = Main.getInstance().configVariables.getBaseCommandMessage().isEmpty() ? "THis ain't workingn Nigga !" : Main.getInstance().configVariables.getBaseCommandMessage();
-        MessageChannel.TO_ALL.send(Text.of());
+        String message = Main.getInstance().configVariables.getBaseCommandMessage();
         text.add(sendMessageWithColor(message));
 
         PaginationList.builder()
