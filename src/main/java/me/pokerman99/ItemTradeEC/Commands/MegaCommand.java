@@ -23,15 +23,11 @@ public class MegaCommand implements CommandExecutor {
     public static List<String> MEGASTONEITEMNAMES = Lists.newArrayList();
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) {
         Player player = (Player) src;
-        String metaDataResult = Utils.getMetaData(player.getUniqueId()).getMeta().getOrDefault("itemtrade-mega", "-1");
-        long cooldown = Long.valueOf(metaDataResult);
 
-        if (System.currentTimeMillis() < cooldown) {
-            Utils.sendMessage(player, "&cYou need to wait another " + Utils.timeDiffFormat((cooldown - System.currentTimeMillis()) / 1000, true) + " before you can use that command again!");
-            return CommandResult.empty();
-        }
+        if (!player.hasPermission("itemtradeec.bypass") && Utils.isOnCooldown(player)) return CommandResult.success();
+
         ConfigVariables configVariables = Main.getInstance().configVariables;
 
         if (!player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
@@ -42,37 +38,27 @@ public class MegaCommand implements CommandExecutor {
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
         String heldItemName = heldItem.getType().getId();
 
-        if (heldItem.getQuantity() > 1) {
-            Utils.sendMessage(src, configVariables.getOnlyOneItemMEGA());
-            return CommandResult.empty();
-        }
-
-
         if (!MEGASTONEITEMNAMES.toString().contains(heldItemName)) {
             Utils.sendMessage(src, configVariables.getNotHoldingItemMEGA());
             return CommandResult.empty();
         }
 
-        heldItem.setQuantity(heldItem.getQuantity() - 1);
-        player.getInventory().offer(heldItem);
+        if (heldItem.getQuantity() > 1) {
+            Utils.sendMessage(src, configVariables.getOnlyOneItemMEGA());
+            return CommandResult.empty();
+        }
 
+        heldItem.setQuantity(0);
+        player.getInventory().offer(heldItem);
 
         Random random = new Random();
         int num = random.nextInt(MEGASTONEITEMNAMES.size());
-
-        ItemStack stack = ItemStack.builder()
-                .itemType(Sponge.getRegistry().getType(ItemType.class, MEGASTONEITEMNAMES.get(num)).get())
-                .build();
+        String item = MEGASTONEITEMNAMES.get(num);
+        ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, item).get()).build();
 
         player.getInventory().offer(stack);
-
-
-        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta unset itemtrade-mega");
-
-        Task.builder().delayTicks(2).execute(task -> {
-            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-mega " + (Main.day + System.currentTimeMillis()));
-        }).submit(Main.getInstance());
-
+        Utils.sendMessage(player, "&aSuccessfully traded your &l" + Utils.getFormattedItemName(heldItemName) + "&a for a &l" + Utils.getFormattedItemName(item) + "&a!");
+        Utils.setCooldown(player);
 
         return CommandResult.empty();
     }

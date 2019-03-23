@@ -28,7 +28,7 @@ public class ItemTradeCommand  implements CommandExecutor {
                         TextStyles.RESET, TextColors.DARK_GRAY, TextStyles.STRIKETHROUGH, "-"
                 ))
                 .title(Text.of(
-                        TextColors.GREEN, "Item Trade"
+                        TextColors.GREEN, " Item Trade "
                 ))
                 .sendTo(src);
 
@@ -39,5 +39,4 @@ public class ItemTradeCommand  implements CommandExecutor {
     public Text sendMessageWithColor(String text) {
         return TextSerializers.FORMATTING_CODE.deserialize(text).toText();
     }
-
 }

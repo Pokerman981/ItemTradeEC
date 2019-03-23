@@ -1,11 +1,10 @@
 package me.pokerman99.ItemTradeEC;
 
-import me.lucko.luckperms.LuckPerms;
-import me.lucko.luckperms.api.Contexts;
-import me.lucko.luckperms.api.LuckPermsApi;
-import me.lucko.luckperms.api.User;
-import me.lucko.luckperms.api.caching.MetaData;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
@@ -22,20 +21,38 @@ public class Utils {
         sender.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(color(message)));
     }
 
-    public static MetaData getMetaData(UUID uuid) {
-        LuckPermsApi api = LuckPerms.getApi();
+    public static boolean isOnCooldown(Player player) {
+        long cooldown = Long.valueOf(player.getOption("itemtrade-cooldown").orElse("-1"));
 
-        User user = api.getUserSafe(uuid).orElse(null);
-        if (user == null) {
-            return null;
+        if (System.currentTimeMillis() < cooldown) {
+            Utils.sendMessage(player, "&cYou need to wait another " + Utils.timeDiffFormat((cooldown - System.currentTimeMillis()) / 1000, true) + " before you can use that command again!");
+            return true;
         }
 
-        Contexts contexts = api.getContextForUser(user).orElse(null);
-        if (contexts == null) {
-            return null;
+        return false;
+    }
+
+    public static String getFormattedItemName(String itemId) {
+        String s = itemId.replaceAll("minecraft:", "").replaceAll("pixelmon:", "");
+        StringBuilder sb = new StringBuilder(s);
+        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+
+        for (int i = 0; i < sb.length(); i++) {
+            if (sb.charAt(i) == '_') {
+                sb.setCharAt(i, ' ');
+                sb.setCharAt(i+1, Character.toUpperCase(sb.charAt(i+1)));
+            }
         }
 
-        return user.getCachedData().getMetaData(contexts);
+        return sb.toString();
+    }
+
+    public static void setCooldown(Player player) {
+        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta unset itemtrade-cooldown");
+
+        Task.builder().delayTicks(2).execute(task -> {
+            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-cooldown " + (Main.day + System.currentTimeMillis()));
+        }).submit(Main.getInstance());
     }
 
     public static String timeDiffFormat(long timeDiffSeconds, boolean includeSeconds) {

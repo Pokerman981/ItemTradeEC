@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-version = "1.4.0"
+version = "1.0"
 group= "me.pokerman99"
 archivesBaseName = "ItemTradeEC"
 
@@ -37,17 +37,8 @@ minecraft {
 repositories {
     mavenCentral()
     maven {
-        url 'http://oss.sonatype.org/content/repositories/snapshots'
-    }
-    maven {
         name 'Sponge maven repo'
         url 'http://repo.spongepowered.org/maven'
-    }
-    maven {
-        url = "http://repo.drnaylor.co.uk/artifactory/list/minecraft"
-    }
-    maven {
-        url = "https://repo.lucko.me/"
     }
 }
 
@@ -57,17 +48,12 @@ configurations {
 }
 
 dependencies {
-    compile files('libs/Pixelmon-1.12.2-7.0.5-universal.jar')
-//    compile files('libs/SpongeForge-1.12.2.jar')
+    compile files('../_depends/Pixelmon-1.12.2-7.0.5-universal.jar')
     compile "org.spongepowered:spongeapi:7.1.0-SNAPSHOT"
-    compile "org.spongepowered:spongeforge:1.12.2-2705-7.1.0-BETA-3406"
-    compile "me.lucko.luckperms:luckperms-api:3.2"
-    compile "io.github.nucleuspowered:nucleus-api:1.4.4-S7.0"
 }
 
 jar {
     includeEmptyDirs = false
-    classifier = 'universal'
     version = "${project.minecraft.version}-${project.version}"
     configurations.shade.each { dep ->
         from(project.zipTree(dep)){

@@ -21,15 +21,10 @@ public class EvoCommand implements CommandExecutor {
     static String[] evoItems = {"pixelmon:fire_stone", "pixelmon:water_stone", "pixelmon:moon_stone", "pixelmon:thunder_stone", "pixelmon:leaf_stone", "pixelmon:sun_stone", "pixelmon:dawn_stone", "pixelmon:dusk_stone"};
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) {
         Player player = (Player) src;
-        String metaDataResult = Utils.getMetaData(player.getUniqueId()).getMeta().getOrDefault("itemtrade-evo", "-1");
-        long cooldown = Long.valueOf(metaDataResult);
 
-        if (System.currentTimeMillis() < cooldown) {
-            Utils.sendMessage(player, "&cYou need to wait another " + Utils.timeDiffFormat((cooldown - System.currentTimeMillis()) / 1000, true) + " before you can use that command again!");
-            return CommandResult.empty();
-        }
+        if (!player.hasPermission("itemtradeec.bypass") && Utils.isOnCooldown(player)) return CommandResult.success();
 
         ConfigVariables configVariables = Main.getInstance().configVariables;
         if (!player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
@@ -40,34 +35,26 @@ public class EvoCommand implements CommandExecutor {
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
         String heldItemName = heldItem.getType().getId();
 
-        if (heldItem.getQuantity() > 1) {
-            Utils.sendMessage(src, configVariables.getOnlyOneItemEVO());
-            return CommandResult.empty();
-        }
-
         if (!heldItemName.matches("(pixelmon:).*?(_stone)")) {
             Utils.sendMessage(src, configVariables.getNotHoldingItemEVO());
             return CommandResult.empty();
         }
 
-        heldItem.setQuantity(heldItem.getQuantity() - 1);
+        if (heldItem.getQuantity() > 1) {
+            Utils.sendMessage(src, configVariables.getOnlyOneItemEVO());
+            return CommandResult.empty();
+        }
+
+        heldItem.setQuantity(0);
         player.getInventory().offer(heldItem);
 
-
         Random random = new Random();
-
-        ItemStack stack = ItemStack.builder()
-                .itemType(Sponge.getRegistry().getType(ItemType.class, evoItems[random.nextInt(evoItems.length)+1]).get())
-                .build();
+        String item = evoItems[random.nextInt(evoItems.length)+1];
+        ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, item).get()).build();
 
         player.getInventory().offer(stack);
-
-        Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta unset itemtrade-evo");
-
-        Task.builder().delayTicks(2).execute(task -> {
-            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-evo " + (Main.day + System.currentTimeMillis()));
-        }).submit(Main.getInstance());
-
+        Utils.sendMessage(player, "&aSuccessfully traded your &l" + Utils.getFormattedItemName(heldItemName) + "&a for a &l" + Utils.getFormattedItemName(item) + "&a!");
+        Utils.setCooldown(player);
 
         return CommandResult.success();
     }

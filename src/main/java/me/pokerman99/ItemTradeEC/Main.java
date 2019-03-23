@@ -1,6 +1,5 @@
 package me.pokerman99.ItemTradeEC;
 
-
 import com.google.inject.Inject;
 import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
 import me.pokerman99.ItemTradeEC.Commands.EvoCommand;
@@ -29,8 +28,6 @@ import java.nio.file.Path;
         description = "A plugin for Justin's servers to provide random tms, evo, and mega items in exchange for there own current item of the three."
 )
 public class Main {
-
-
     @Inject
     @DefaultConfig(sharedRoot = false)
     public Path defaultConfig;
@@ -67,15 +64,12 @@ public class Main {
         configVariables = new ConfigVariables();
 
         if (!defaultConfig.toFile().exists()) {
-            //TODO Gen default config
             genDefaultConfig();
         }
 
-        //TODO Register commands, listeners, populate variables
         loadMegaStoneNames();
         registerCommands();
         populateVariables();
-
     }
 
     public void populateVariables() {
@@ -112,8 +106,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-
 
     public void registerCommands() {
         CommandSpec tm = CommandSpec.builder()
@@ -157,8 +149,4 @@ public class Main {
             }
         }
     }
-
-
-
-
 }
