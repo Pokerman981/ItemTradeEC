@@ -9,11 +9,14 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
 
 import java.util.Random;
 
@@ -44,16 +47,25 @@ public class TMCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
-        heldItem.setQuantity(0);
-        player.getInventory().offer(heldItem);
+        //heldItem.setQuantity(0);
+        //player.getInventory().offer(heldItem);
 
         Random random = new Random();
         int num = heldItemName.contains("tm") ? random.nextInt(174) + 1 : random.nextInt(10) + 1;
         String type = heldItemName.contains("tm") ? "tm" : "hm";
         ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, "pixelmon:" + type + num).get()).build();
+        ItemStackSnapshot itemStackSnapshot = stack.createSnapshot();
 
+
+        Utils.sendMessage(player, "&aSuccessfully traded your &l"
+                + heldItem.getTranslation().get()
+                + "&a for a &l"
+                + itemStackSnapshot.createStack().getTranslation().get() + "&a!");
+
+        heldItem.setQuantity(0);
+        player.getInventory().offer(heldItem);
         player.getInventory().offer(stack);
-        Utils.sendMessage(player, "&aSuccessfully traded your &l" + Utils.getFormattedItemName(heldItemName) + "&a for a &l" + Utils.getFormattedItemName(type + num) + "&a!");
+
         Utils.setCooldown(player);
 
         return CommandResult.success();
