@@ -49,7 +49,7 @@ public class EvoCommand implements CommandExecutor {
         player.getInventory().offer(heldItem);
 
         Random random = new Random();
-        String item = evoItems[random.nextInt(evoItems.length)+1];
+        String item = evoItems[random.nextInt(evoItems.length)];
         ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, item).get()).build();
 
         player.getInventory().offer(stack);

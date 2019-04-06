@@ -37,10 +37,6 @@ public class Main {
     public ConfigurationLoader<CommentedConfigurationNode> loader;
 
     @Inject
-    @ConfigDir(sharedRoot = false)
-    public Path ConfigDir;
-
-    @Inject
     public PluginContainer plugin;
     public PluginContainer getPlugin() {
         return this.plugin;
@@ -52,10 +48,7 @@ public class Main {
     public static Main getInstance(){
         return instance;
     }
-
     public ConfigVariables configVariables;
-    public static int day = 3600 * 24 * 1000;
-
 
     @Listener
     public void onInit(GameInitializationEvent event) throws IOException {

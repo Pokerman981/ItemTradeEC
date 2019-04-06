@@ -51,7 +51,7 @@ public class Utils {
         Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta unset itemtrade-cooldown");
 
         Task.builder().delayTicks(2).execute(task -> {
-            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-cooldown " + (Main.day + System.currentTimeMillis()));
+            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-cooldown " + ((3600*3*1000) + System.currentTimeMillis()));
         }).submit(Main.getInstance());
     }
 
