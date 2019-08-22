@@ -47,11 +47,12 @@ public class Utils {
         return sb.toString();
     }
 
-    public static void setCooldown(Player player) {
+    public static void setCooldown(Player player, int hours) {
         Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta unset itemtrade-cooldown");
 
         Task.builder().delayTicks(2).execute(task -> {
-            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-cooldown " + ((3600*3*1000) + System.currentTimeMillis()));
+            int cooldown = player.hasPermission("itemtradeec.halfcooldown") ? 3600*hours*500 : 3600*hours*1000;
+            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "lp user " + player.getName() + " meta set itemtrade-cooldown " + (cooldown + System.currentTimeMillis()));
         }).submit(Main.getInstance());
     }
 

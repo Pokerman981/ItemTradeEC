@@ -7,7 +7,11 @@ public class ConfigVariables{
     private String onlyOneItemTM;
 
     private String notHoldingItemEVO;
+    private String notHoldingItemZCrystal;
+    private String notHoldingItemPlate;
     private String onlyOneItemEVO;
+    private String onlyOneItemZCrystal;
+    private String onlyOneItemPlate;
 
     private String notHoldingItemMEGA;
     private String onlyOneItemMEGA;
@@ -19,6 +23,14 @@ public class ConfigVariables{
 
     public void setOnlyOneItemMEGA(String onlyOneItemMEGA) {
         this.onlyOneItemMEGA = onlyOneItemMEGA;
+    }
+
+    public void setOnlyOneItemPlate(String onlyOneItemPlate) {
+        this.onlyOneItemPlate = onlyOneItemPlate;
+    }
+
+    public void setOnlyOneItemZCrystal(String onlyOneItemZCrystal) {
+        this.onlyOneItemZCrystal = onlyOneItemZCrystal;
     }
 
     public String getNotHoldingItemMEGA() {
@@ -37,6 +49,14 @@ public class ConfigVariables{
         this.notHoldingItemEVO = notHoldingItemEVO;
     }
 
+    public void setNotHoldingItemPlate(String notHoldingItemPlate) {
+        this.notHoldingItemPlate = notHoldingItemPlate;
+    }
+
+    public void setNotHoldingItemZCrystal(String notHoldingItemZCrystal) {
+        this.notHoldingItemZCrystal = notHoldingItemZCrystal;
+    }
+
     public String getOnlyOneItemEVO() {
         return onlyOneItemEVO;
     }
@@ -47,6 +67,14 @@ public class ConfigVariables{
 
     public String getOnlyOneItemTM() {
         return onlyOneItemTM;
+    }
+
+    public String getOnlyOneItemZCrystal() {
+        return onlyOneItemZCrystal;
+    }
+
+    public String getOnlyOneItemPlate() {
+        return onlyOneItemPlate;
     }
 
     public void setOnlyOneItemTM(String onlyOneItem) {
@@ -65,9 +93,15 @@ public class ConfigVariables{
         return notHoldingItemTM;
     }
 
+    public String getNotHoldingItemPlate() {
+        return notHoldingItemPlate;
+    }
+
+    public String getNotHoldingItemZCrystal() {
+        return notHoldingItemZCrystal;
+    }
+
     public void setNotHoldingItemTM(String notHoldingItemTM) {
         this.notHoldingItemTM = notHoldingItemTM;
     }
-
-
 }

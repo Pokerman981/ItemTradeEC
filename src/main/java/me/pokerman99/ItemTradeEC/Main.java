@@ -2,10 +2,9 @@ package me.pokerman99.ItemTradeEC;
 
 import com.google.inject.Inject;
 import com.pixelmonmod.pixelmon.enums.EnumMegaPokemon;
-import me.pokerman99.ItemTradeEC.Commands.EvoCommand;
-import me.pokerman99.ItemTradeEC.Commands.ItemTradeCommand;
-import me.pokerman99.ItemTradeEC.Commands.MegaCommand;
-import me.pokerman99.ItemTradeEC.Commands.TMCommand;
+import com.pixelmonmod.pixelmon.enums.EnumPlate;
+import com.pixelmonmod.pixelmon.enums.items.EnumZCrystals;
+import me.pokerman99.ItemTradeEC.Commands.*;
 import net.minecraft.item.Item;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -60,7 +59,10 @@ public class Main {
             genDefaultConfig();
         }
 
+        loadPlateNames();
+        loadZCrystalNames();
         loadMegaStoneNames();
+
         registerCommands();
         populateVariables();
     }
@@ -72,12 +74,16 @@ public class Main {
         configVariables.setOnlyOneItemTM(rootNode.getNode("commands", "tm-hm", "only-one-item").getString());
 
         configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "evo", "not-holding-item").getString());
-        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "evo", "only-one-item").getString());
+        configVariables.setOnlyOneItemEVO(rootNode.getNode("commands", "evo", "only-one-item").getString());
 
-        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "mega", "not-holding-item").getString());
-        configVariables.setNotHoldingItemEVO(rootNode.getNode("commands", "mega", "only-one-item").getString());
+        configVariables.setNotHoldingItemMEGA(rootNode.getNode("commands", "mega", "not-holding-item").getString());
+        configVariables.setOnlyOneItemMEGA(rootNode.getNode("commands", "mega", "only-one-item").getString());
 
+        configVariables.setNotHoldingItemZCrystal(rootNode.getNode("commands", "zcrystal", "not-holding-item").getString());
+        configVariables.setOnlyOneItemZCrystal(rootNode.getNode("commands", "zcrystal", "only-one-item").getString());
 
+        configVariables.setNotHoldingItemPlate(rootNode.getNode("commands", "plate", "not-holding-item").getString());
+        configVariables.setOnlyOneItemPlate(rootNode.getNode("commands", "plate", "only-one-item").getString());
     }
 
     public void genDefaultConfig() {
@@ -92,6 +98,11 @@ public class Main {
         rootNode.getNode("commands", "mega", "not-holding-item").setValue("&cYou are not holding a mega stone");
         rootNode.getNode("commands", "mega", "only-one-item").setValue("&cPlease only have one item in the stack!");
 
+        rootNode.getNode("commands", "zcrystal", "not-holding-item").setValue("&cYou are not holding a Z-Crystal");
+        rootNode.getNode("commands", "zcrystal", "only-one-item").setValue("&cPlease only have one item in the stack!");
+
+        rootNode.getNode("commands", "plate", "not-holding-item").setValue("&cYou are not holding a plate");
+        rootNode.getNode("commands", "plate", "only-one-item").setValue("&cPlease only have one item in the stack!");
 
         try {
             loader.save(rootNode);
@@ -116,11 +127,23 @@ public class Main {
                 .executor(new MegaCommand())
                 .build();
 
+        CommandSpec zcrystal = CommandSpec.builder()
+                .permission("itemtradeec.command.zcrystal")
+                .executor(new ZCrystalCommand())
+                .build();
+
+        CommandSpec plate = CommandSpec.builder()
+                .permission("itemtradeec.command.plate")
+                .executor(new PlateCommand())
+                .build();
+
         CommandSpec itemtrade = CommandSpec.builder()
                 .permission("itemtradeec.base")
                 .child(tm, "tm", "hm")
                 .child(evo, "evo")
                 .child(mega, "mega")
+                .child(plate, "plate")
+                .child(zcrystal, "zcrystal")
                 .executor(new ItemTradeCommand())
                 .build();
 
@@ -140,6 +163,21 @@ public class Main {
 
                 MegaCommand.MEGASTONEITEMNAMES.add(itemName);
             }
+        }
+    }
+
+    public void loadZCrystalNames() {
+        EnumZCrystals[] enumZCrystals = EnumZCrystals.values();
+        for (EnumZCrystals enumZ : enumZCrystals) {
+            ZCrystalCommand.ZCRYSTALITEMNAMES.add(enumZ.getFileName());
+        }
+    }
+
+    public void loadPlateNames() {
+        EnumPlate[] enumZCrystals = EnumPlate.values();
+        for (EnumPlate enumPlate : enumZCrystals) {
+            String name = "pixelmon:" + enumPlate.getItem().getUnlocalizedName().replace("item.", "");
+            PlateCommand.PLATEITEMNAMES.add(name);
         }
     }
 }

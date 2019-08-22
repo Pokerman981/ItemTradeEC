@@ -58,7 +58,7 @@ public class MegaCommand implements CommandExecutor {
 
         player.getInventory().offer(stack);
         Utils.sendMessage(player, "&aSuccessfully traded your &l" + Utils.getFormattedItemName(heldItemName) + "&a for a &l" + Utils.getFormattedItemName(item) + "&a!");
-        Utils.setCooldown(player);
+        Utils.setCooldown(player, 3);
 
         return CommandResult.empty();
     }
