@@ -1,6 +1,7 @@
 package me.pokerman99.ItemTradeEC.Commands;
 
 import com.google.common.collect.Lists;
+import com.pixelmonmod.pixelmon.enums.EnumPlate;
 import me.pokerman99.ItemTradeEC.ConfigVariables;
 import me.pokerman99.ItemTradeEC.Main;
 import me.pokerman99.ItemTradeEC.Utils;
@@ -36,9 +37,21 @@ public class PlateCommand implements CommandExecutor {
         }
 
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
-        String heldItemName = heldItem.getType().getName();
+        String heldItemId = heldItem.getType().getId().replaceAll("pixelmon:", "");
+        ArrayList<String> plate_types = new ArrayList<>();
+        boolean found = false;
 
-        if (!heldItemName.endsWith("_plate")) {
+        for (EnumPlate plate : EnumPlate.values()) {
+            String plate_id = plate.name().toLowerCase() + "_plate";
+
+            if (plate_id.equalsIgnoreCase(heldItemId)) {
+                found = true;
+            } else {
+                plate_types.add(plate_id);
+            }
+        }
+
+        if (!found) {
             Utils.sendMessage(src, configVariables.getNotHoldingItemPlate());
             return CommandResult.empty();
         }
@@ -48,20 +61,14 @@ public class PlateCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
-        Random random = new Random();
-        int num = random.nextInt(PLATEITEMNAMES.size());
-        String item = PLATEITEMNAMES.get(num);
+        String item = plate_types.get(new Random().nextInt(plate_types.size()));
         List<String> valuables = new ArrayList<>(Arrays.asList("spooky_plate", "fist_plate", "zap_plate", "toxic_plate", "insect_plate", "meadow_plate", "splash_plate" ,"icicle_plate"));
 
-        if (valuables.contains(item)) {
-            item = PLATEITEMNAMES.get(num);
-        }
+        if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
+        if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
+        if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
 
-        if (valuables.contains(item)) {
-            item = PLATEITEMNAMES.get(num);
-        }
-
-        ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, item).get()).build();
+        ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, "pixelmon:" + item).get()).build();
 
         Utils.sendMessage(player, "&aSuccessfully traded your &l"
                 + heldItem.getTranslation().get()

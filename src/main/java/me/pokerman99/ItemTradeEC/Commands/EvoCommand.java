@@ -1,5 +1,7 @@
 package me.pokerman99.ItemTradeEC.Commands;
 
+import com.pixelmonmod.pixelmon.enums.EnumEvolutionStone;
+import com.pixelmonmod.pixelmon.enums.EnumSpecies;
 import me.pokerman99.ItemTradeEC.ConfigVariables;
 import me.pokerman99.ItemTradeEC.Main;
 import me.pokerman99.ItemTradeEC.Utils;
@@ -15,11 +17,12 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.scheduler.Task;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class EvoCommand implements CommandExecutor {
-    static String[] evoItems = {"pixelmon:fire_stone", "pixelmon:water_stone", "pixelmon:moon_stone", "pixelmon:thunder_stone", "pixelmon:leaf_stone", "pixelmon:sun_stone", "pixelmon:dawn_stone", "pixelmon:dusk_stone"};
-
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
         Player player = (Player) src;
@@ -33,9 +36,9 @@ public class EvoCommand implements CommandExecutor {
         }
 
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
-        String heldItemName = heldItem.getType().getId();
+        String heldItemId = heldItem.getType().getId();
 
-        if (!heldItemName.matches("(pixelmon:).*?(_stone)")) {
+        if (!heldItemId.matches("(pixelmon:).*?(_stone)")) {
             Utils.sendMessage(src, configVariables.getNotHoldingItemEVO());
             return CommandResult.empty();
         }
@@ -45,15 +48,15 @@ public class EvoCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
-        heldItem.setQuantity(0);
-        player.getInventory().offer(heldItem);
+        List<String> evoItems = new ArrayList<>(Arrays.asList("pixelmon:fire_stone", "pixelmon:water_stone", "pixelmon:moon_stone", "pixelmon:thunder_stone", "pixelmon:leaf_stone", "pixelmon:sun_stone", "pixelmon:dawn_stone", "pixelmon:dusk_stone"));
 
-        Random random = new Random();
-        String item = evoItems[random.nextInt(evoItems.length)];
+        evoItems.remove(heldItemId);
+        String item = evoItems.get(new Random().nextInt(evoItems.size()));
         ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, item).get()).build();
 
+        heldItem.setQuantity(0);
         player.getInventory().offer(stack);
-        Utils.sendMessage(player, "&aSuccessfully traded your &l" + Utils.getFormattedItemName(heldItemName) + "&a for a &l" + Utils.getFormattedItemName(item) + "&a!");
+        Utils.sendMessage(player, "&aSuccessfully traded your &l" + Utils.getFormattedItemName(heldItemId) + "&a for a &l" + Utils.getFormattedItemName(item) + "&a!");
         Utils.setCooldown(player, 3);
 
         return CommandResult.success();

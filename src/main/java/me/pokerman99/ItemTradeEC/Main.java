@@ -19,6 +19,9 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Plugin(
         id = "itemtradeec",
@@ -59,9 +62,8 @@ public class Main {
             genDefaultConfig();
         }
 
-        loadPlateNames();
-        loadZCrystalNames();
-        loadMegaStoneNames();
+//        loadPlateNames();
+//        loadMegaStoneNames();
 
         registerCommands();
         populateVariables();
@@ -150,34 +152,28 @@ public class Main {
         Sponge.getCommandManager().register(instance, itemtrade, "itemtrade");
     }
 
-    public void loadMegaStoneNames() {
-        EnumMegaPokemon[] enumMegaPokemon = EnumMegaPokemon.values();
-        for (EnumMegaPokemon enumMegaPokemon1 : enumMegaPokemon) {
-            Item[] items = enumMegaPokemon1.getMegaEvoItems();
+//    public void loadMegaStoneNames() {
+//        EnumMegaPokemon[] enumMegaPokemon = EnumMegaPokemon.values();
+//
+//        for (EnumMegaPokemon enumMegaPokemon1 : enumMegaPokemon) {
+//            Item[] items = enumMegaPokemon1.getMegaEvoItems();
+//
+//            for (Item item : items) {
+//                String itemName = item.getRegistryName().toString();
+//                if (itemName.contains("air")) {
+//                    continue;
+//                }
+//
+//                MegaCommand.MEGASTONEITEMNAMES.add(itemName);
+//            }
+//        }
+//    }
 
-            for (Item item : items) {
-                String itemName = item.getRegistryName().toString();
-                if (itemName.contains("air")) {
-                    continue;
-                }
-
-                MegaCommand.MEGASTONEITEMNAMES.add(itemName);
-            }
-        }
-    }
-
-    public void loadZCrystalNames() {
-        EnumZCrystals[] enumZCrystals = EnumZCrystals.values();
-        for (EnumZCrystals enumZ : enumZCrystals) {
-            ZCrystalCommand.ZCRYSTALITEMNAMES.add(enumZ.getFileName());
-        }
-    }
-
-    public void loadPlateNames() {
-        EnumPlate[] enumZCrystals = EnumPlate.values();
-        for (EnumPlate enumPlate : enumZCrystals) {
-            String name = "pixelmon:" + enumPlate.getItem().getUnlocalizedName().replace("item.", "");
-            PlateCommand.PLATEITEMNAMES.add(name);
-        }
-    }
+//    public void loadPlateNames() {
+//        EnumPlate[] enumZCrystals = EnumPlate.values();
+//        for (EnumPlate enumPlate : enumZCrystals) {
+//            String name = "pixelmon:" + enumPlate.getItem().getUnlocalizedName().replace("item.", "");
+//            PlateCommand.PLATEITEMNAMES.add(name);
+//        }
+//    }
 }

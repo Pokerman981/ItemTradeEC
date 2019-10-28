@@ -35,9 +35,11 @@ public class TMCommand implements CommandExecutor {
         }
 
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
-        String heldItemName = heldItem.getType().getName();
+        String heldItemId = heldItem.getType().getName();
+        String type = heldItemId.contains("tm") ? "tm" : "hm";
+        int current_number = Integer.valueOf(heldItemId.replaceAll(type, "").replaceAll("pixelmon:", ""));
 
-        if (!heldItemName.contains("pixelmon:tm") && !heldItemName.contains("pixelmon:hm")) {
+        if (!heldItemId.contains("pixelmon:tm") && !heldItemId.contains("pixelmon:hm")) {
             Utils.sendMessage(src, configVariables.getNotHoldingItemTM());
             return CommandResult.empty();
         }
@@ -47,15 +49,13 @@ public class TMCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
-        //heldItem.setQuantity(0);
-        //player.getInventory().offer(heldItem);
+        int num = heldItemId.contains("tm") ? new Random().nextInt(174) + 1 : new Random().nextInt(10) + 1;
 
-        Random random = new Random();
-        int num = heldItemName.contains("tm") ? random.nextInt(174) + 1 : random.nextInt(10) + 1;
-        String type = heldItemName.contains("tm") ? "tm" : "hm";
+        if (current_number == num) num = heldItemId.contains("tm") ? new Random().nextInt(174) + 1 : new Random().nextInt(10) + 1;
+        if (current_number == num) num = heldItemId.contains("tm") ? new Random().nextInt(174) + 1 : new Random().nextInt(10) + 1;
+
         ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, "pixelmon:" + type + num).get()).build();
         ItemStackSnapshot itemStackSnapshot = stack.createSnapshot();
-
 
         Utils.sendMessage(player, "&aSuccessfully traded your &l"
                 + heldItem.getTranslation().get()
@@ -63,7 +63,6 @@ public class TMCommand implements CommandExecutor {
                 + itemStackSnapshot.createStack().getTranslation().get() + "&a!");
 
         heldItem.setQuantity(0);
-//        player.getInventory().offer(heldItem);
         player.getInventory().offer(stack);
         Utils.setCooldown(player, 3);
 
