@@ -62,7 +62,7 @@ public class PlateCommand implements CommandExecutor {
         }
 
         String item = plate_types.get(new Random().nextInt(plate_types.size()));
-        List<String> valuables = new ArrayList<>(Arrays.asList("spooky_plate", "fist_plate", "zap_plate", "toxic_plate", "insect_plate", "meadow_plate", "splash_plate" ,"icicle_plate"));
+        List<String> valuables = new ArrayList<>(Arrays.asList("spooky_plate", "fist_plate", "toxic_plate", "insect_plate", "meadow_plate", "splash_plate" ,"icicle_plate"));
 
         if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
         if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));

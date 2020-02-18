@@ -151,29 +151,4 @@ public class Main {
 
         Sponge.getCommandManager().register(instance, itemtrade, "itemtrade");
     }
-
-//    public void loadMegaStoneNames() {
-//        EnumMegaPokemon[] enumMegaPokemon = EnumMegaPokemon.values();
-//
-//        for (EnumMegaPokemon enumMegaPokemon1 : enumMegaPokemon) {
-//            Item[] items = enumMegaPokemon1.getMegaEvoItems();
-//
-//            for (Item item : items) {
-//                String itemName = item.getRegistryName().toString();
-//                if (itemName.contains("air")) {
-//                    continue;
-//                }
-//
-//                MegaCommand.MEGASTONEITEMNAMES.add(itemName);
-//            }
-//        }
-//    }
-
-//    public void loadPlateNames() {
-//        EnumPlate[] enumZCrystals = EnumPlate.values();
-//        for (EnumPlate enumPlate : enumZCrystals) {
-//            String name = "pixelmon:" + enumPlate.getItem().getUnlocalizedName().replace("item.", "");
-//            PlateCommand.PLATEITEMNAMES.add(name);
-//        }
-//    }
 }

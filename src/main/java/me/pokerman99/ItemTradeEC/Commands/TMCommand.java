@@ -13,6 +13,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.scheduler.Task;
@@ -36,8 +37,6 @@ public class TMCommand implements CommandExecutor {
 
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
         String heldItemId = heldItem.getType().getName();
-        String type = heldItemId.contains("tm") ? "tm" : "hm";
-        int current_number = Integer.valueOf(heldItemId.replaceAll(type, "").replaceAll("pixelmon:", ""));
 
         if (!heldItemId.contains("pixelmon:tm") && !heldItemId.contains("pixelmon:hm")) {
             Utils.sendMessage(src, configVariables.getNotHoldingItemTM());
@@ -49,6 +48,8 @@ public class TMCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
+        String type = heldItemId.contains("tm") ? "tm" : "hm";
+        int current_number = Integer.valueOf(heldItemId.replaceAll(type, "").replaceAll("pixelmon:", ""));
         int num = heldItemId.contains("tm") ? new Random().nextInt(174) + 1 : new Random().nextInt(10) + 1;
 
         if (current_number == num) num = heldItemId.contains("tm") ? new Random().nextInt(174) + 1 : new Random().nextInt(10) + 1;
