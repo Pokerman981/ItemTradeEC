@@ -2,6 +2,7 @@ package me.pokerman99.ItemTradeEC.Commands;
 
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.enums.EnumPlate;
+import com.pixelmonmod.pixelmon.enums.items.EnumZCrystals;
 import me.pokerman99.ItemTradeEC.ConfigVariables;
 import me.pokerman99.ItemTradeEC.Main;
 import me.pokerman99.ItemTradeEC.Utils;
@@ -39,36 +40,40 @@ public class PlateCommand implements CommandExecutor {
         ItemStack heldItem = player.getItemInHand(HandTypes.MAIN_HAND).get();
         String heldItemId = heldItem.getType().getId().replaceAll("pixelmon:", "");
         ArrayList<String> plate_types = new ArrayList<>();
-        boolean found = false;
-
-        for (EnumPlate plate : EnumPlate.values()) {
-            String plate_id = plate.name().toLowerCase() + "_plate";
-
-            if (plate_id.equalsIgnoreCase(heldItemId)) {
-                found = true;
-            } else {
-                plate_types.add(plate_id);
-            }
-        }
-
-        if (!found) {
-            Utils.sendMessage(src, configVariables.getNotHoldingItemPlate());
-            return CommandResult.empty();
-        }
 
         if (heldItem.getQuantity() > 1) {
             Utils.sendMessage(src, configVariables.getOnlyOneItemPlate());
             return CommandResult.empty();
         }
 
-        String item = plate_types.get(new Random().nextInt(plate_types.size()));
-        List<String> valuables = new ArrayList<>(Arrays.asList("spooky_plate", "fist_plate", "toxic_plate", "insect_plate", "meadow_plate", "splash_plate" ,"icicle_plate"));
+        for (EnumPlate plate : EnumPlate.values()) {
+            String plate_id = plate.name().toLowerCase() + "_plate";
+            plate_types.add(plate_id);
+        }
 
-        if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
-        if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
-        if (valuables.contains(item)) item = plate_types.get(new Random().nextInt(plate_types.size()));
+        if (!plate_types.contains(heldItemId)) {
+            Utils.sendMessage(src, configVariables.getNotHoldingItemPlate());
+            return CommandResult.empty();
+        }
 
-        ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, "pixelmon:" + item).get()).build();
+        String pick = "";
+        int roll = new Random().nextInt(100) + 1;
+        List<String> tier1 = new ArrayList<>(Arrays.asList("pixie_plate", "stone_plate", "earth_plate", "mind_plate", "flame_plate", "dread_plate", "sky_plate"));
+        List<String> tier2 = new ArrayList<>(Arrays.asList("draco_plate", "iron_plate", "zap_plate"));
+        List<String> tier3 = new ArrayList<>(Arrays.asList("spooky_plate", "toxic_plate", "meadow_plate", "insect_plate", "icicle_plate", "splash_plate" ,"fist_plate")); //rare
+        tier1.remove(heldItemId);
+        tier2.remove(heldItemId);
+        tier3.remove(heldItemId);
+
+        if (roll <= 4) { //[1,4] = 4
+            pick = tier3.get(new Random().nextInt(tier3.size()));
+        } else if (roll <= 29) { //[5,29] = 25
+            pick = tier2.get(new Random().nextInt(tier2.size()));
+        } else { // [30,100]
+            pick = tier1.get(new Random().nextInt(tier1.size()));
+        }
+
+        ItemStack stack = ItemStack.builder().itemType(Sponge.getRegistry().getType(ItemType.class, "pixelmon:" + pick).get()).build();
 
         Utils.sendMessage(player, "&aSuccessfully traded your &l"
                 + heldItem.getTranslation().get()
@@ -77,7 +82,7 @@ public class PlateCommand implements CommandExecutor {
 
         heldItem.setQuantity(0);
         player.getInventory().offer(stack);
-        Utils.setCooldown(player, 6);
+        Utils.setCooldown(player, 36);
 
         return CommandResult.success();
     }

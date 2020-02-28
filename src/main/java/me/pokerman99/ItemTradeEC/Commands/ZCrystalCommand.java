@@ -81,7 +81,7 @@ public class ZCrystalCommand implements CommandExecutor {
 
         heldItem.setQuantity(0);
         player.getInventory().offer(stack);
-        Utils.setCooldown(player, 3);
+        Utils.setCooldown(player, 6);
 
         return CommandResult.success();
     }
